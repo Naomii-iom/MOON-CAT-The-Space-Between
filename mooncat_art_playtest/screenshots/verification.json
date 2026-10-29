@@ -1,0 +1,26 @@
+{
+  "baseline": "/Users/liuyuchen/Desktop/POLYU/mooncat/backups/MOON_CAT_Guided_v1.py",
+  "baseline_sha256": "ac0fa746c267118be50a35220b6d92f43c512ee78923836eda8bab939d5783e9",
+  "background_png_loads_in_180_frames": 1,
+  "source_image_size": [
+    1536,
+    1024
+  ],
+  "render_size": [
+    1060,
+    735
+  ],
+  "board_cached_alpha_corners": "transparent; interior opaque",
+  "unchanged_ast": "all maps, gameplay, input, saves, character, UI and palette code",
+  "unchanged_pixels": [
+    "top_room_label_interior",
+    "sidebar_interior",
+    "bottom_ui_interior",
+    "road_tile_interior",
+    "cat_on_tile_interior",
+    "exit_on_tile_interior"
+  ],
+  "offscreen_render_ms_median": 0.89,
+  "offscreen_render_ms_p95": 1.262,
+  "performance_limit": "CPU offscreen rendering only; not native window FPS or browser FPS"
+}

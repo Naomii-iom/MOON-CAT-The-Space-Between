@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-27",
+  "result": "pass_with_documented_runtime_warnings",
+  "runtime": "Pygbag 0.9.3 / pygame-ce WASM in ChatGPT in-app browser",
+  "url": "http://127.0.0.1:8126/",
+  "viewport": [1060, 735],
+  "tests": {
+    "boot_after_user_click": "pass",
+    "moonlight_background": "pass",
+    "shadow_background": "pass",
+    "walk_up_facing": "pass",
+    "walk_down_facing": "pass",
+    "walk_left_facing": "pass",
+    "walk_right_facing": "pass",
+    "idle_after_movement": "pass",
+    "legal_q_crossfade": "pass",
+    "rapid_second_q_ignored": "pass",
+    "illegal_q_keeps_world": "pass",
+    "h_hint": "pass",
+    "z_undo": "pass",
+    "r_restart": "pass",
+    "python_tracebacks": 0
+  },
+  "screenshots": [
+    "browser_moonlight.png",
+    "browser_rapid_q_shadow.png",
+    "browser_q_transition.png",
+    "browser_failed_q.png",
+    "browser_after_undo.png",
+    "browser_facing_up.png",
+    "browser_facing_down.png",
+    "browser_facing_left.png",
+    "browser_facing_right.png",
+    "browser_hint.png"
+  ],
+  "runtime_warnings": [
+    "Pygbag logs MEDIA USER ACTION REQUIRED before/around media activation.",
+    "Pygbag logs BrowserFS not found in its bootstrap runtime.",
+    "The game recovered after the required page click and remained playable.",
+    "Browser persistence was not claimed or tested."
+  ],
+  "native_window": {
+    "result": "not_available_in_agent_gui_session",
+    "reason": "SDL Cocoa application registration aborted with SIGABRT before window creation",
+    "crash_report": "/Users/liuyuchen/Library/Logs/DiagnosticReports/Python-2026-10-27-105845.ips"
+  }
+}

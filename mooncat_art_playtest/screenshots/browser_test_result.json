@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-27",
+  "url": "http://127.0.0.1:8124/",
+  "engine": "Pygame via Pygbag 0.9.3",
+  "viewport": [
+    1060,
+    735
+  ],
+  "checked": [
+    "game loaded",
+    "moonlight background visible",
+    "W/D movement",
+    "Q to original shadow world",
+    "Z restores moonlight background",
+    "R resets room"
+  ],
+  "pythonTracebacks": [],
+  "nativeWindowTest": "macOS GUI startup failed in execution environment"
+}

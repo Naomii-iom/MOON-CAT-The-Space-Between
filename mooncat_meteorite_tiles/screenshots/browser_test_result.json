@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-29",
+  "runtime": "Pygbag 0.9.3 in a real Chromium browser",
+  "url": "http://127.0.0.1:8128/",
+  "result": "pass",
+  "verified": [
+    "game menu loads",
+    "Level 1 opens",
+    "W and S movement",
+    "Q world transition",
+    "Moonlight and Shadow tile rendering",
+    "floating animation remains continuous through Q",
+    "cat, guide marker and tile overlays remain visually aligned"
+  ],
+  "automated_native_checks": [
+    "Z undo",
+    "R restart",
+    "H progressive hint state",
+    "all five rooms remain solvable",
+    "logical coordinates and collision state are unchanged"
+  ],
+  "errors": [],
+  "notes": [
+    "The GIF is captured from real Pygame rendering at 12 fps.",
+    "A non-blocking BrowserFS availability warning from the local Pygbag shell may appear; gameplay did not stop."
+  ]
+}

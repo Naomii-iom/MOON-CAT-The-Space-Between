@@ -1,0 +1,19 @@
+[project]
+name = "mooncat"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Liu Yuchen", email = "yuchen0221.liu@connect.polyu.hk" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pygame-ce>=2.5.8",
+]
+
+[project.scripts]
+mooncat = "mooncat:main"
+
+[build-system]
+requires = ["uv_build>=0.12.12,<0.13.0"]
+build-backend = "uv_build"

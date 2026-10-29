@@ -1,0 +1,272 @@
+{
+  "source": "assets/source/cat_sprite_sheet_original.png",
+  "source_sha256": "81b697d96bc10071e5741c6bedd04eef9a6dd37f29c91e981ea05815332cbd41",
+  "source_size": [
+    1983,
+    793
+  ],
+  "source_mode": "RGBA",
+  "processing": "exact crop + transparent padding + shared foot anchor; no repainting",
+  "canvas_size": [
+    256,
+    208
+  ],
+  "foot_anchor": [
+    128,
+    196
+  ],
+  "animations": {
+    "walk_down": [
+      {
+        "file": "assets/characters/cat/walk_down/00.png",
+        "source_rect": [
+          178,
+          27,
+          179,
+          181
+        ],
+        "source_foot_anchor": [
+          273,
+          207
+        ],
+        "sha256": "26dfcfcd2ac2a0b0f584dacc76e9abb5aa309cf0fe3706d0a6813ab5f21b2ca8"
+      },
+      {
+        "file": "assets/characters/cat/walk_down/01.png",
+        "source_rect": [
+          398,
+          27,
+          170,
+          180
+        ],
+        "source_foot_anchor": [
+          485,
+          206
+        ],
+        "sha256": "a18f2ccd6919143e0ad8e5978d00fe84af8c4b43022416e7da1d0760bf1a4691"
+      },
+      {
+        "file": "assets/characters/cat/walk_down/02.png",
+        "source_rect": [
+          623,
+          27,
+          167,
+          173
+        ],
+        "source_foot_anchor": [
+          693,
+          199
+        ],
+        "sha256": "7cad315c3b4d35306ebd4ed41c780817b41a400ff928830b5d822c5c8c1f600c"
+      },
+      {
+        "file": "assets/characters/cat/walk_down/03.png",
+        "source_rect": [
+          823,
+          28,
+          153,
+          182
+        ],
+        "source_foot_anchor": [
+          888,
+          209
+        ],
+        "sha256": "6e562f228b1906d97b5fadc6782bc2db30bb9bccb6b3022772bb57ad4ccd3b72"
+      }
+    ],
+    "walk_right": [
+      {
+        "file": "assets/characters/cat/walk_right/00.png",
+        "source_rect": [
+          178,
+          224,
+          208,
+          169
+        ],
+        "source_foot_anchor": [
+          271,
+          392
+        ],
+        "sha256": "8145d34895c0c427a952d139301dd4b05d1547e5c76b8330ba29cfbb8e0fff12"
+      },
+      {
+        "file": "assets/characters/cat/walk_right/01.png",
+        "source_rect": [
+          444,
+          224,
+          201,
+          177
+        ],
+        "source_foot_anchor": [
+          538,
+          400
+        ],
+        "sha256": "f39c8d9d70107d2f3794ac3bdd66a4c0011c072289763859bc4132ccfc75b61f"
+      },
+      {
+        "file": "assets/characters/cat/walk_right/02.png",
+        "source_rect": [
+          706,
+          225,
+          199,
+          169
+        ],
+        "source_foot_anchor": [
+          796,
+          393
+        ],
+        "sha256": "e4a8d61ba59f3b02b257984ead6677b4b0c71c276e25589b63b128466a6ec572"
+      },
+      {
+        "file": "assets/characters/cat/walk_right/03.png",
+        "source_rect": [
+          958,
+          220,
+          215,
+          171
+        ],
+        "source_foot_anchor": [
+          1054,
+          390
+        ],
+        "sha256": "e5f8992ad974c47f0141476c56fdba54d4978ad7ce83ad5d1cc15111efa7dff9"
+      }
+    ],
+    "walk_left": [
+      {
+        "file": "assets/characters/cat/walk_left/00.png",
+        "source_rect": [
+          176,
+          415,
+          201,
+          170
+        ],
+        "source_foot_anchor": [
+          281,
+          584
+        ],
+        "sha256": "8ae7a1eba72c1fed1f55f13b021372527b4a4d4d6e06e2966137c57db321b7ac"
+      },
+      {
+        "file": "assets/characters/cat/walk_left/01.png",
+        "source_rect": [
+          428,
+          412,
+          203,
+          173
+        ],
+        "source_foot_anchor": [
+          510,
+          584
+        ],
+        "sha256": "7faa9114bbb9b2efcb3c51c59b67583168ae77d56c2d9615a9a0ded6d5023c60"
+      },
+      {
+        "file": "assets/characters/cat/walk_left/02.png",
+        "source_rect": [
+          691,
+          410,
+          206,
+          173
+        ],
+        "source_foot_anchor": [
+          792,
+          582
+        ],
+        "sha256": "017134ec4b0a38ae98be0f3444ff5b5f5b9052ebdd90a0b5608b2d4637bd0dc2"
+      },
+      {
+        "file": "assets/characters/cat/walk_left/03.png",
+        "source_rect": [
+          952,
+          410,
+          208,
+          174
+        ],
+        "source_foot_anchor": [
+          1040,
+          583
+        ],
+        "sha256": "f6dee06194210844086745fbfe026130f058535706fc177a702fc55d1141c623"
+      }
+    ],
+    "walk_up": [
+      {
+        "file": "assets/characters/cat/walk_up/00.png",
+        "source_rect": [
+          163,
+          595,
+          157,
+          182
+        ],
+        "source_foot_anchor": [
+          234,
+          776
+        ],
+        "sha256": "5302689332b09f422c0614c379fccca86b73e1505940d7048f79cacbd706e31e"
+      },
+      {
+        "file": "assets/characters/cat/walk_up/01.png",
+        "source_rect": [
+          356,
+          599,
+          160,
+          178
+        ],
+        "source_foot_anchor": [
+          434,
+          776
+        ],
+        "sha256": "b49fa3c0506adc71b7d7095e822ab0c2c152d21d68163287644ffef59d4dbf0d"
+      },
+      {
+        "file": "assets/characters/cat/walk_up/02.png",
+        "source_rect": [
+          563,
+          600,
+          163,
+          178
+        ],
+        "source_foot_anchor": [
+          638,
+          777
+        ],
+        "sha256": "5fb73eadc215759c8416cbb9d198f7b82b25da2df16981bf2e50457fe5855903"
+      },
+      {
+        "file": "assets/characters/cat/walk_up/03.png",
+        "source_rect": [
+          765,
+          599,
+          154,
+          178
+        ],
+        "source_foot_anchor": [
+          845,
+          776
+        ],
+        "sha256": "4162fc574c32bd9ba60f93afdebaa0d04fd191548b2ace513da8c49c98c76cb5"
+      }
+    ]
+  },
+  "unused_components": [
+    [
+      1003,
+      599,
+      184,
+      179
+    ],
+    [
+      1323,
+      591,
+      177,
+      188
+    ],
+    [
+      1579,
+      597,
+      225,
+      182
+    ]
+  ]
+}

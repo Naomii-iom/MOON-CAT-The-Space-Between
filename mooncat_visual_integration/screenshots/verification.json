@@ -1,0 +1,328 @@
+{
+  "result": "pass",
+  "resolution": [
+    1060,
+    735
+  ],
+  "grid": {
+    "columns": 15,
+    "rows": 9,
+    "tile": 44
+  },
+  "protected_logic_ast_equal": {
+    "ROOMS": true,
+    "GUIDES": true,
+    "State": true,
+    "execute": true,
+    "solution_hint": true,
+    "guide_goal": true,
+    "load_progress": true,
+    "save_progress": true
+  },
+  "key_mapping_present": {
+    "pygame.K_q": true,
+    "pygame.K_h": true,
+    "pygame.K_z": true,
+    "pygame.K_r": true,
+    "pygame.K_a": true,
+    "pygame.K_d": true,
+    "pygame.K_w": true,
+    "pygame.K_s": true,
+    "pygame.K_LEFT": true,
+    "pygame.K_RIGHT": true,
+    "pygame.K_UP": true,
+    "pygame.K_DOWN": true
+  },
+  "startup_png_loads": 22,
+  "png_loads_after_180_renders": 22,
+  "background_source_sizes": [
+    [
+      1102,
+      620
+    ],
+    [
+      1200,
+      630
+    ]
+  ],
+  "background_cover_crops": [
+    [
+      123,
+      0,
+      1060,
+      735
+    ],
+    [
+      170,
+      0,
+      1060,
+      735
+    ]
+  ],
+  "cat_frames": [
+    {
+      "file": "assets/characters/cat/idle/00.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/idle/01.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/idle/02.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/idle/03.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_down/00.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_down/01.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_down/02.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_down/03.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_left/00.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_left/01.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_left/02.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_left/03.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_right/00.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_right/01.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_right/02.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_right/03.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_up/00.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_up/01.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_up/02.png",
+      "size": [
+        256,
+        208
+      ]
+    },
+    {
+      "file": "assets/characters/cat/walk_up/03.png",
+      "size": [
+        256,
+        208
+      ]
+    }
+  ],
+  "world_transition_ms": 520,
+  "move_interpolation_ms": 150,
+  "invalid_q_kept_world": true,
+  "solutions": {
+    "1": {
+      "solved": true,
+      "visited_states": 508,
+      "actions": [
+        "up",
+        "up",
+        "right",
+        "right",
+        "right",
+        "right",
+        "q",
+        "right",
+        "right",
+        "right",
+        "q",
+        "up",
+        "up",
+        "right",
+        "right",
+        "right",
+        "right"
+      ]
+    },
+    "2": {
+      "solved": true,
+      "visited_states": 549,
+      "actions": [
+        "up",
+        "up",
+        "right",
+        "right",
+        "right",
+        "q",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "up",
+        "up",
+        "right",
+        "right"
+      ]
+    },
+    "3": {
+      "solved": true,
+      "visited_states": 1496,
+      "actions": [
+        "up",
+        "up",
+        "right",
+        "right",
+        "right",
+        "q",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "up",
+        "up",
+        "right"
+      ]
+    },
+    "4": {
+      "solved": true,
+      "visited_states": 1098,
+      "actions": [
+        "up",
+        "up",
+        "right",
+        "e",
+        "right",
+        "right",
+        "q",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "up",
+        "up",
+        "right",
+        "right"
+      ]
+    },
+    "5": {
+      "solved": true,
+      "visited_states": 402,
+      "actions": [
+        "up",
+        "up",
+        "right",
+        "right",
+        "right",
+        "right",
+        "q",
+        "right",
+        "right",
+        "q",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right"
+      ]
+    }
+  },
+  "offscreen_render_ms": {
+    "median": 0.835,
+    "p95": 1.117
+  },
+  "limits": [
+    "Offscreen timing is a regression indicator, not a native-window or browser FPS measurement.",
+    "Browser interaction is recorded separately in browser_test_result.json."
+  ]
+}
