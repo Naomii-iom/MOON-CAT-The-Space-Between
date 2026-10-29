@@ -127,7 +127,10 @@ def main() -> None:
     load_log: list[str] = []
     ns = execute_without_loop(ROOT / "main.py", load_log)
     initial_loads = len(load_log)
-    assert initial_loads == 34, f"Expected 2 backgrounds + 20 cat + 12 tile PNG loads, got {initial_loads}"
+    assert initial_loads == 35, (
+        "Expected 2 backgrounds + 20 cat + 12 tile + 1 room-3 stone PNG "
+        f"loads, got {initial_loads}"
+    )
 
     def digest(path: Path) -> str:
         return hashlib.sha256(path.read_bytes()).hexdigest()

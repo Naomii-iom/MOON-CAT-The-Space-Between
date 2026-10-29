@@ -48,6 +48,18 @@ METEORITE_TILES = MeteoriteTiles(
     float_amplitude=FLOAT_TILES_AMPLITUDE,
     float_period_seconds=FLOAT_TILES_PERIOD_SECONDS,
 )
+
+# Room 3's pushable stone uses the user-provided artwork.  Crop and scale it
+# once during startup; the puzzle still uses the original grid coordinate and
+# collision rules.
+_room3_stone_source = pygame.image.load(
+    ART_ROOT / "objects" / "room3_stone.png"
+).convert_alpha()
+_room3_stone_bounds = _room3_stone_source.get_bounding_rect(min_alpha=8)
+ROOM3_STONE_SPRITE = pygame.transform.scale(
+    _room3_stone_source.subsurface(_room3_stone_bounds),
+    (42, 39),
+)
 WORLD_TRANSITION = WorldTransition((WIDTH, HEIGHT), duration_ms=520)
 
 
@@ -703,8 +715,8 @@ def draw_board():
     if s.stone is not None:
         x,y=visual_tile_center(s.stone, now_ms)
         if s.world==0:
-            pygame.draw.polygon(screen,(160,188,216),[(x-16,y-10),(x-5,y-18),(x+16,y-12),(x+18,y+11),(x+4,y+17),(x-15,y+10)])
-            pygame.draw.line(screen,(215,230,243),(x-5,y-13),(x+5,y-7),2)
+            stone_rect = ROOM3_STONE_SPRITE.get_rect(center=(x, y-1))
+            screen.blit(ROOM3_STONE_SPRITE, stone_rect)
         else:
             pygame.draw.circle(screen,(110,77,108),(x,y),12,1)
 
