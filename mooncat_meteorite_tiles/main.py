@@ -56,9 +56,11 @@ _room3_stone_source = pygame.image.load(
     ART_ROOT / "objects" / "room3_stone.png"
 ).convert_alpha()
 _room3_stone_bounds = _room3_stone_source.get_bounding_rect(min_alpha=8)
+_room3_stone_size = _room3_stone_bounds.size
+_room3_stone_scale = min(40 / _room3_stone_size[0], 40 / _room3_stone_size[1])
 ROOM3_STONE_SPRITE = pygame.transform.scale(
     _room3_stone_source.subsurface(_room3_stone_bounds),
-    (42, 39),
+    tuple(max(1, round(value * _room3_stone_scale)) for value in _room3_stone_size),
 )
 WORLD_TRANSITION = WorldTransition((WIDTH, HEIGHT), duration_ms=520)
 
