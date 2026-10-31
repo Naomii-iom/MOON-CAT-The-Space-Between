@@ -19,10 +19,9 @@ pygame.init()
 
 WIDTH, HEIGHT = 1060, 735
 FPS = 60
-TILE = 44
+TILE = 54
 COLS, ROWS = 15, 9
-OX, OY = 51, 174
-SIDE_X = 760
+OX, OY = 50, 145
 FLOAT_TILES_ENABLED = True
 FLOAT_TILES_AMPLITUDE = 1.5
 FLOAT_TILES_PERIOD_SECONDS = 3.4
@@ -40,7 +39,7 @@ BACKGROUNDS = WorldBackgrounds(
     (WIDTH, HEIGHT),
     BOARD_RECT,
 )
-CAT_SPRITES = CatSprites(ART_ROOT / "characters" / "cat")
+CAT_SPRITES = CatSprites(ART_ROOT / "characters" / "cat", display_size=(74, 60))
 METEORITE_TILES = MeteoriteTiles(
     ART_ROOT / "tiles" / "meteorites",
     TILE,
@@ -57,7 +56,11 @@ _room3_stone_source = pygame.image.load(
 ).convert_alpha()
 _room3_stone_bounds = _room3_stone_source.get_bounding_rect(min_alpha=8)
 _room3_stone_size = _room3_stone_bounds.size
-_room3_stone_scale = min(40 / _room3_stone_size[0], 40 / _room3_stone_size[1])
+_room3_stone_limit = TILE - 6
+_room3_stone_scale = min(
+    _room3_stone_limit / _room3_stone_size[0],
+    _room3_stone_limit / _room3_stone_size[1],
+)
 ROOM3_STONE_SPRITE = pygame.transform.scale(
     _room3_stone_source.subsurface(_room3_stone_bounds),
     tuple(max(1, round(value * _room3_stone_scale)) for value in _room3_stone_size),
@@ -435,6 +438,7 @@ mode = "menu"       # menu, play, clear, finished
 history = []
 notice = ""
 notice_ttl = 0
+notice_duration = 0
 hint_level = 0
 guide_open = False
 hint_text = ""
@@ -472,12 +476,13 @@ def sound(key):
 
 
 def message(msg, frames=160):
-    global notice, notice_ttl
-    notice, notice_ttl = msg, frames
+    global notice, notice_ttl, notice_duration
+    frames = min(frames, 180)
+    notice, notice_ttl, notice_duration = msg, frames, frames
 
 
 def begin(index):
-    global current, mode, hint_level, history, particles, transition, notice_ttl
+    global current, mode, hint_level, history, particles, transition, notice_ttl, notice_duration
     global guide_open, hint_text
     current = State(index)
     history = []
@@ -487,6 +492,7 @@ def begin(index):
     hint_text = ""
     guide_open = True  # Every room first opens with an explicit walkthrough.
     notice_ttl = 0
+    notice_duration = 0
     mode = "play"
     WORLD_TRANSITION.cancel()
     CAT_MOTION.reset(tile_center(current.player), "down")
@@ -816,69 +822,52 @@ def draw_play():
     draw_play_ui()
 
 
+def draw_floating_prompt(text, y, alpha=255, font_obj=C17, colour=(255, 232, 184)):
+    """Centered text with only a restrained shadow—never a panel or tab."""
+    if not text or alpha <= 0:
+        return
+    image = font_obj.render(str(text), True, colour)
+    image.set_alpha(alpha)
+    shadow = font_obj.render(str(text), True, (5, 8, 20))
+    shadow.set_alpha(round(alpha * 0.7))
+    rect = image.get_rect(center=(WIDTH // 2, y))
+    screen.blit(shadow, rect.move(2, 2))
+    screen.blit(image, rect)
+
+
 def draw_play_ui():
-    """Draw opaque/readable interface chrome above the world transition."""
+    """Minimal full-screen HUD; the enlarged board remains the visual focus."""
     s=current
     p=world_palette(s.world)
-    put_text("MOON CAT",51,37,F34,WHITE)
-    put_text("THE SPACE BETWEEN",53,82,F14,MUTED)
-    rounded((335,40,280,36),(22,32,54),17,(61,86,104),1)
-    put_text(s.level["name"],475,58,F14,WHITE,True)
-    rounded((OX-13,129,686,32),(19,30,48),9)
-    put_text(s.level["subtitle"],OX,137,F14,MUTED)
-    pill(766,43,"MOONLIGHT",s.world==0,LIGHT)
-    pill(865,43,"SHADOW",s.world==1,SHADOW)
-    put_text("Q  SHIFT",765,92,F14,p["accent"])
-    rounded((748,164,276,418),(17,24,44),17,(53,68,100),1)
-    draw_mini_world(770,185,224)
-    pygame.draw.line(screen,(49,61,88),(768,345),(1005,345),1)
-    put_text("WHAT CHANGES?",771,362,F14,WHITE)
-    msg=[]
-    if s.level["plate"]:
-        side="BLUE" if s.level["plate_world"]==0 else "PINK"
-        if s.index==2:
-            msg.append(("STONE ON BLUE PLATE",s.plate_on()))
-        else:
-            msg.append((f"{side} PRESSURE PLATE",s.plate_on()))
-    if s.level["lantern"]:
-        msg.append(("BLUE LANTERN",s.lit))
-    if s.level["bridge"]:
-        msg.append(("PINK BRIDGE",s.bridge_on()))
-    if s.level["gate"]:
-        msg.append(("OTHER-WORLD DOOR",s.plate_on()))
-    if not msg:
-        msg=[("THE TWO MAPS DIFFER",True)]
-    for i,(label,ok) in enumerate(msg):
-        y=400+i*34
-        pygame.draw.circle(screen,(132,226,172) if ok else (116,92,117),(781,y+8),6)
-        put_text(label,797,y,F12,WHITE if ok else MUTED)
-    pygame.draw.line(screen,(49,61,88),(768,503),(1005,503),1)
-    put_text("ECHO  /  10 STEPS",771,522,F14,MUTED)
-    if s.echo:
-        w,x,y,ttl=s.echo
-        put_text(f"{ttl} STEPS LEFT",771,544,F14,SHADOW)
-        pygame.draw.rect(screen,(51,44,72),(897,547,107,8),border_radius=4)
-        pygame.draw.rect(screen,SHADOW,(897,547,int(107*ttl/10),8),border_radius=4)
-    else:
-        put_text("Q leaves your double behind",771,543,F12,MUTED)
+    put_text("MOON CAT",34,20,F26,WHITE)
+    put_text(s.level["name"],360,22,F14,WHITE,True)
+    pill(309,52,"MOONLIGHT",s.world==0,LIGHT)
+    pill(408,52,"SHADOW",s.world==1,SHADOW)
+    put_text("Q  SHIFT",510,59,F14,p["accent"])
 
-    rounded((38,593,986,110),(16,23,43),16,(52,67,96),1)
-    put_text("A / D / W / S     MOVE",56,608,F14,WHITE)
-    put_text("Q     SHIFT + ECHO",281,608,F14,p["accent"])
-    put_text("E     INTERACT",501,608,F14,WHITE)
-    put_text("Z     UNDO",683,608,F14,WHITE)
-    put_text("H     HINT",854,608,F14,WHITE)
+    # Echo steps are a small, shape-neutral HUD, visually separate from tiles.
+    echo_hud=pygame.Surface((150,58),pygame.SRCALPHA)
+    pygame.draw.rect(echo_hud,(5,9,24,128),echo_hud.get_rect(),border_radius=13)
+    ttl=s.echo[3] if s.echo else None
+    echo_hud.blit(F12.render("ECHO",True,MUTED),(12,9))
+    number=F26.render(f"{ttl:02d}" if ttl is not None else "--",True,SHADOW if ttl is not None else MUTED)
+    echo_hud.blit(number,(48,14))
+    echo_hud.blit(F12.render("/ 10",True,WHITE),(101,29))
+    screen.blit(echo_hud,(625,24))
+
+    # The other-world map stays compact and clear of the Echo counter.
+    draw_mini_world(850,18,170)
+    put_text(s.level["subtitle"],OX,116,F14,MUTED)
+    put_text(f"MEMORIES  {len(memories)} / 5",790,116,F12,GOLD)
+
     task, target, target_world = guide_goal(s)
-    put_text("下一步 / NEXT: " + task,55,643,C17,GOLD)
-    if hint_text:
-        put_text(hint_text[:45],55,668,C14,(175,217,235))
-    elif notice_ttl > 0:
-        # Chinese character coverage requires CJK font, not the Latin HUD font.
-        put_text(notice[:45],55,668,C14,(175,217,235))
-    else:
-        put_text("按 G 看本关教程  ·  按 H 获得逐级提示  ·  Z 撤销  ·  R 重来",55,668,C14,MUTED)
-    put_text("G guide · H hint · Z undo · R restart · ESC menu",55,689,F12,MUTED)
-    put_text(f"MEMORIES  {len(memories)} / 5",863,679,F12,GOLD)
+    draw_floating_prompt("下一步 / NEXT: " + task,657,225,C17)
+    if notice_ttl > 0 and notice_duration > 0:
+        elapsed=notice_duration-notice_ttl
+        fade=min(1.0,elapsed/15.0,notice_ttl/30.0)
+        draw_floating_prompt(notice[:50],684,round(255*fade),C14,(255,240,205))
+    put_text("WASD move  ·  Q shift  ·  E interact  ·  G guide  ·  H hint  ·  Z undo  ·  R restart",
+             WIDTH//2,710,F12,(173,182,204),True)
 
 
 
@@ -1053,7 +1042,7 @@ while running:
                 else:
                     hint_text = "暂时找不到可行路线，按 Z 撤销或 R 重来。"
             hint_level += 1
-            message(hint_text, 400)
+            message(hint_text, 180)
         elif k in (pygame.K_z, pygame.K_BACKSPACE):
             if history:
                 current=history.pop()
