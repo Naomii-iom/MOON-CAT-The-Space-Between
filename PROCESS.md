@@ -34,7 +34,7 @@ I also added clear responses for movement, failed movement, shifting, pushing, m
 
 I asked one person to play the game. My playtester said:
 
-> “The player was unsure what the stone was for and did not understand its role in the puzzle.”
+> “The player was unsure what the stone was for.”
 
 The stone was visible, but its connection to the plate and the route in the other world was unclear. This showed me that seeing an object is not the same as understanding its purpose.
 

@@ -77,7 +77,7 @@ uv run python mooncat_meteorite_tiles/main.py
 
 ### Echo remaining-move HUD
 
-![Echo HUD](mooncat_meteorite_tiles/screenshots/fullscreen_ui_echo_hud.png)
+![Echo HUD](mooncat_meteorite_tiles/screenshots/native_alpha_fix/level1_shadow.png)
 
 ## Evidence and Documentation
 

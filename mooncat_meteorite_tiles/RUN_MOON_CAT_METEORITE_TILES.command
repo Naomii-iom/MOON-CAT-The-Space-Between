@@ -5,9 +5,9 @@ meteorite_dir="$(cd -- "$(dirname -- "$0")" && pwd)"
 project_python="$meteorite_dir/../.venv/bin/python"
 
 if [[ ! -x "$project_python" ]]; then
-    echo "找不到 MOON CAT 项目的 Python 环境：$project_python"
-    echo "请确认本文件夹仍放在 mooncat 项目目录内。"
-    read -r -p "按 Enter 关闭…"
+    echo "MOON CAT's Python environment was not found: $project_python"
+    echo "Keep this folder inside the mooncat project directory."
+    read -r -p "Press Enter to close..."
     exit 1
 fi
 
