@@ -31,31 +31,15 @@ FLOAT_TILES_AMPLITUDE = 1.5
 FLOAT_TILES_PERIOD_SECONDS = 3.4
 SAVE_FILE = Path(__file__).resolve().with_name("mooncat-progress.json")
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+window = pygame.display.set_mode((WIDTH, HEIGHT))
+# Cocoa can expose an alpha-bearing window surface. Composite onto opaque RGB
+# first so transparent text/tile pixels cannot erase the window's alpha.
+screen = pygame.Surface((WIDTH, HEIGHT), depth=32)
 pygame.display.set_caption("MOON CAT  |  The Space Between")
 clock = pygame.time.Clock()
 
 ART_ROOT = Path(__file__).resolve().parent / "assets"
 BOARD_RECT = pygame.Rect(OX-13, OY-13, COLS*TILE+26, ROWS*TILE+26)
-BOARD_VIGNETTE_RECT = BOARD_RECT.inflate(140, 100)
-
-
-def make_board_vignette(size):
-    """Cached soft superellipse: darkens detail without drawing a panel edge."""
-    small = pygame.Surface((120, 76), pygame.SRCALPHA)
-    width, height = small.get_size()
-    for y in range(height):
-        dy = abs((y + 0.5) / height * 2 - 1)
-        for x in range(width):
-            dx = abs((x + 0.5) / width * 2 - 1)
-            distance = (dx**4 + dy**4) ** 0.25
-            fade = max(0.0, min(1.0, (1.0 - distance) / 0.28))
-            fade = fade * fade * (3.0 - 2.0 * fade)
-            small.set_at((x, y), (4, 7, 20, round(76 * fade)))
-    return pygame.transform.smoothscale(small, size).convert_alpha()
-
-
-BOARD_VIGNETTE = make_board_vignette(BOARD_VIGNETTE_RECT.size)
 BACKGROUNDS = WorldBackgrounds(
     ART_ROOT / "backgrounds" / "moonlight.png",
     ART_ROOT / "backgrounds" / "shadow.png",
@@ -92,10 +76,10 @@ WORLD_TRANSITION = WorldTransition((WIDTH, HEIGHT), duration_ms=520)
 
 
 def font(size, bold=False):
-    for name in ("Menlo", "DejaVu Sans Mono", "Avenir Next", "Arial"):
-        f = pygame.font.SysFont(name, size, bold=bold)
-        if f:
-            return f
+    """Use a file-backed font instead of macOS SysFont/CoreText surfaces."""
+    bundled = ART_ROOT.parent.parent / "mooncat_web_playtest" / "assets" / "NotoSansCJKsc-Regular.otf"
+    if bundled.is_file():
+        return pygame.font.Font(str(bundled), size)
     return pygame.font.Font(None, size)
 
 F12, F14, F16, F20, F26, F34, F54 = [font(s, s in (20, 26, 34, 54)) for s in (12, 14, 16, 20, 26, 34, 54)]
@@ -644,7 +628,6 @@ def draw_board():
     s = current
     p = world_palette(s.world)
     brect = BOARD_RECT
-    screen.blit(BOARD_VIGNETTE, BOARD_VIGNETTE_RECT)
     now_ms = pygame.time.get_ticks()
     now = now_ms/1000
     shake_x = random.randint(-2,2) if shakes else 0
@@ -953,6 +936,7 @@ def render():
         # The landscapes and board crossfade, while interface text remains
         # single, crisp and immediately reflects the authoritative new world.
         draw_play_ui()
+    window.blit(screen, (0, 0))
     pygame.display.flip()
 
 

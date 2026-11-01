@@ -1,0 +1,56 @@
+{
+  "driver": "cocoa",
+  "window_masks": [
+    16711680,
+    65280,
+    255,
+    4278190080
+  ],
+  "canvas_masks": [
+    16711680,
+    65280,
+    255,
+    0
+  ],
+  "checks": [
+    {
+      "level": 1,
+      "world": 0,
+      "screenshot": "level1_moonlight.png",
+      "movement_and_q": true
+    },
+    {
+      "level": 1,
+      "world": 1,
+      "screenshot": "level1_shadow.png",
+      "movement_and_q": true
+    },
+    {
+      "level": 3,
+      "world": 0,
+      "screenshot": "level3_moonlight.png",
+      "movement_and_q": true
+    },
+    {
+      "level": 3,
+      "world": 1,
+      "screenshot": "level3_shadow.png",
+      "movement_and_q": true
+    },
+    {
+      "level": 4,
+      "world": 0,
+      "screenshot": "level4_moonlight.png",
+      "movement_and_q": true
+    },
+    {
+      "level": 4,
+      "world": 1,
+      "screenshot": "level4_shadow.png",
+      "movement_and_q": true
+    }
+  ],
+  "all_non_render_functions_unchanged": true,
+  "all_png_corners_transparent_and_composite_correctly": true,
+  "result": "pass"
+}
