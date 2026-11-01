@@ -25,14 +25,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def canonical_node(source: str, name: str) -> str:
+    class NormalizeUiText(ast.NodeTransformer):
+        def visit_Constant(self, node: ast.Constant):
+            if isinstance(node.value, str):
+                return ast.copy_location(ast.Constant(value="<ui-text>"), node)
+            return node
+
     tree = ast.parse(source)
     for node in tree.body:
         if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and node.name == name:
-            return ast.dump(node, include_attributes=False)
+            return ast.dump(NormalizeUiText().visit(node), include_attributes=False)
         if isinstance(node, ast.Assign):
             for target in node.targets:
                 if isinstance(target, ast.Name) and target.id == name:
-                    return ast.dump(node.value, include_attributes=False)
+                    return ast.dump(NormalizeUiText().visit(node.value), include_attributes=False)
     raise KeyError(name)
 
 

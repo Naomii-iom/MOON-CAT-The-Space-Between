@@ -19,6 +19,10 @@ pygame.init()
 
 WIDTH, HEIGHT = 1060, 735
 FPS = 60
+NOTICE_FADE_IN_FRAMES = 12
+NOTICE_HOLD_FRAMES = 138
+NOTICE_FADE_OUT_FRAMES = 42
+NOTICE_TOTAL_FRAMES = NOTICE_FADE_IN_FRAMES + NOTICE_HOLD_FRAMES + NOTICE_FADE_OUT_FRAMES
 TILE = 54
 COLS, ROWS = 15, 9
 OX, OY = 50, 145
@@ -88,30 +92,13 @@ WORLD_TRANSITION = WorldTransition((WIDTH, HEIGHT), duration_ms=520)
 
 
 def font(size, bold=False):
-    for name in ("Avenir Next", "Helvetica Neue", "Arial", "DejaVu Sans"):
+    for name in ("Menlo", "DejaVu Sans Mono", "Avenir Next", "Arial"):
         f = pygame.font.SysFont(name, size, bold=bold)
         if f:
             return f
     return pygame.font.Font(None, size)
 
 F12, F14, F16, F20, F26, F34, F54 = [font(s, s in (20, 26, 34, 54)) for s in (12, 14, 16, 20, 26, 34, 54)]
-
-# macOS has PingFang SC. Use a separate family for Chinese guidance.
-def chinese_font(size, bold=False):
-    # The user's macOS has PingFang; prefer the actual file so Chinese won't
-    # show as empty squares even if SDL cannot match the family name.
-    for filename in ("/System/Library/Fonts/PingFang.ttc",
-                     "/System/Library/Fonts/Supplemental/Arial Unicode.ttf"):
-        if Path(filename).is_file():
-            return pygame.font.Font(filename, size)
-    for family in ("PingFang SC", "Hiragino Sans GB", "Heiti SC",
-                   "Noto Sans CJK SC", "Microsoft YaHei"):
-        match = pygame.font.match_font(family)
-        if match:
-            return pygame.font.Font(match, size)
-    return pygame.font.SysFont("Arial Unicode MS", size, bold=bold)
-
-C14, C17, C20, C26 = [chinese_font(sz) for sz in (14, 17, 20, 26)]
 WHITE = (236, 240, 255)
 MUTED = (149, 159, 189)
 DARK = (12, 16, 35)
@@ -164,37 +151,37 @@ ROOMS = [
     ),
     room(
         "03 / THE STONE'S SHADOW", "Some things have weight across worlds.",
-        "Push a stone in one world; another world remembers where it rests.",
+        "Push here; another world remembers.",
         line(1, 7, 4) | column(2, 4, 6) | line(1, 3, 5),
         line(1, 6, 4) | line(10, 12, 4) | column(2, 4, 6) |
         column(12, 2, 4) | line(12, 13, 2),
         (2, 6), (13, 2), 1,
         plate=(6, 4), plate_world=0, stone=(4, 4),
         bridge={(7, 4), (8, 4), (9, 4)}, memory=(0, 1, 5),
-        tips=("Blue stones can be pushed with your body. Their weight travels through worlds.",
-              "Push the stone RIGHT until it sits on the blue plate at (6,4). Then Q reveals a pink bridge."),
+        tips=("Push Moonlight stones with your body.",
+              "Push right onto the plate. Then press Q."),
     ),
     room(
         "04 / A LIGHT LEFT BEHIND", "Two actions, two worlds, one way through.",
-        "Light a lamp before you leave a version of yourself behind.",
+        "Light the lamp, then leave an Echo.",
         line(1, 6, 4) | column(2, 4, 6),
         line(1, 8, 4) | line(10, 13, 4) | column(2, 4, 6) | column(11, 2, 4) | line(11, 13, 2),
         (2, 6), (13, 2), 1,
         plate=(5, 4), plate_world=0, gate=(7, 4), gate_world=1,
         lantern=(3, 3), bridge={(9, 4)}, memory=(1, 13, 4),
-        tips=("A BLUE lantern creates a PINK bridge. An ECHO opens a different door.",
-              "Stand at (3,4), press E to light the lamp. Stand at (5,4), then Q. Run across the pink gate and bridge."),
+        tips=("The lamp builds; Echo holds.",
+              "Light the lamp. Echo the plate. Cross."),
     ),
     room(
         "05 / THE SPACE BETWEEN", "The echo can hold a door for YOU.",
-        "The last door asks you to leave a shadow of yourself behind.",
+        "Leave an Echo to open the final gate.",
         line(1, 6, 4) | line(8, 13, 4) | column(2, 4, 6) | column(12, 4, 6),
         line(1, 3, 4) | line(5, 9, 4) | column(2, 4, 6),
         (2, 6), (13, 4), 0,
         plate=(8, 4), plate_world=1, gate=(11, 4), gate_world=0,
         memory=(0, 12, 6),
-        tips=("The PINK plate opens the BLUE door. But the plate is on the other side of a wall.",
-              "Blue to x=5 -> Q to Pink. Pink to x=8 -> Q to Blue. Your pink ECHO holds the final gate."),
+        tips=("The Shadow plate opens Moonlight's gate.",
+              "Reach Shadow's plate. Press Q. Exit right."),
     ),
 ]
 
@@ -203,96 +190,96 @@ ROOMS = [
 # The details are deliberately clear; discovering the execution is still fun.
 GUIDES = [
     {
-        "title": "01 / 消失的道路", "goal": "找到右上角发光的出口。",
+        "title": "01 / THE MISSING STEP", "goal": "Reach the glowing exit.",
         "steps": [
-            "先用 WASD / 方向键走到蓝色道路的断口。",
-            "按 Q 切换到粉色世界：同一位置有另一条路。",
-            "越过缺口后再按 Q 返回蓝色，走向出口。",
+            "Walk to the Moonlight path's gap.",
+            "Press Q. A Shadow path appears here.",
+            "Cross, then press Q near the upper path.",
         ],
-        "rule": "只有两个世界都能站立的格子，才能直接切换。",
-        "short": "先到断口，再按 Q 换路。",
+        "rule": "Shift only where both worlds share ground.",
+        "short": "Reach the gap, then press Q.",
     },
     {
-        "title": "02 / 留下一个自己", "goal": "让蓝色机关打开粉色大门。",
+        "title": "02 / SOMEONE MUST STAY", "goal": "Open the Shadow gate.",
         "steps": [
-            "先走到蓝色世界的黄色踏板上。",
-            "站在踏板上按 Q：原地留下小猫残影 Echo。",
-            "残影只维持 10 步，迅速从粉色世界穿过门。",
+            "Step onto the Moonlight pressure plate.",
+            "Press Q there to leave an Echo.",
+            "Cross before the Echo fades.",
         ],
-        "rule": "Echo 会帮你压住离开世界的踏板。",
-        "short": "站上黄色踏板按 Q，留下残影开门。",
+        "rule": "Echo holds the plate for ten moves.",
+        "short": "Press Q on the plate, then cross.",
     },
     {
-        "title": "03 / 石头的影子", "goal": "推动石头，让另一世界出现一座桥。",
+        "title": "03 / THE STONE'S SHADOW", "goal": "Create the Shadow bridge.",
         "steps": [
-            "在蓝色世界，走到灰白色石头的左边。",
-            "按 D / → 向右推石头，直到压住黄色踏板。",
-            "石头到位后会锁住。按 Q 换到粉色世界过桥。",
+            "Stand left of the Moonlight stone.",
+            "Push right until it reaches the plate.",
+            "Press Q, then cross the new bridge.",
         ],
-        "rule": "蓝色石头压住踏板，粉色桥才会出现。推错可按 Z。",
-        "short": "从左边推石头到黄色踏板，再按 Q。",
+        "rule": "The stone powers a bridge across worlds.",
+        "short": "Push the stone right, then press Q.",
     },
     {
-        "title": "04 / 留下的月光", "goal": "点灯造桥，并用 Echo 开门。",
+        "title": "04 / A LIGHT LEFT BEHIND", "goal": "Light the bridge and open the gate.",
         "steps": [
-            "蓝色世界先走到月光灯附近，按 E 点亮它。",
-            "灯会让粉色世界的断桥出现。再走到黄色踏板。",
-            "站在踏板上按 Q 留下 Echo，然后快速穿门过桥。",
+            "Press E beside the Moonlight lamp.",
+            "Then reach the pressure plate.",
+            "Press Q and cross before Echo fades.",
         ],
-        "rule": "这一关要组合两种跨世界因果：点灯造桥＋残影开门。",
-        "short": "先按 E 点灯，再站上踏板按 Q。",
+        "rule": "The lamp builds; Echo holds.",
+        "short": "Light the lamp, then Echo the plate.",
     },
     {
-        "title": "05 / 世界之间", "goal": "用粉色世界的残影打开蓝色世界的门。",
+        "title": "05 / THE SPACE BETWEEN", "goal": "Open the Moonlight gate.",
         "steps": [
-            "在蓝色世界沿着道路走到右侧断口附近。",
-            "按 Q 进入粉色世界，走到黄色踏板 (右边)。",
-            "站在踏板上按 Q，留下 Echo，再往右走向出口。",
+            "Reach the right Moonlight gap.",
+            "Press Q and find the Shadow plate.",
+            "Press Q there, then reach the exit.",
         ],
-        "rule": "前面是蓝色开粉色门；最后一关要反过来！",
-        "short": "在粉色踏板上按 Q，让蓝色的门打开。",
+        "rule": "A Shadow Echo opens Moonlight's gate.",
+        "short": "Leave Echo on the Shadow plate.",
     },
 ]
 
-KEY_ZH = {"left": "A / ← 向左", "right": "D / → 向右", "up": "W / ↑ 向上",
-          "down": "S / ↓ 向下", "q": "Q 切换世界", "e": "E 激活机关"}
+KEY_LABELS = {"left": "A / LEFT", "right": "D / RIGHT", "up": "W / UP",
+              "down": "S / DOWN", "q": "Q / SHIFT", "e": "E / USE"}
 
 
 def guide_goal(s):
     """Contextual, non-spoiler task and one glowing board target."""
     if s.index == 0:
         if s.world == 0 and s.player[0] < 6:
-            return "走到蓝色断口附近，按 Q 找另一条路。", (6, 4), 0
+            return "Reach the Moonlight gap. Press Q.", (6, 4), 0
         if s.world == 1:
-            return "沿粉色道路向右，到了台阶入口再按 Q。", (9, 4), 1
-        return "沿着蓝色台阶走向右上角的发光出口。", s.level["exit"], 0
+            return "Follow Shadow right. Press Q near the steps.", (9, 4), 1
+        return "Climb toward the glowing exit.", s.level["exit"], 0
     if s.index == 1:
         if s.world == 0:
-            return ("站在黄色踏板上，按 Q 留下残影。" if s.player == s.level["plate"]
-                    else "先找到蓝色世界的黄色踏板，走上去。"), s.level["plate"], 0
+            return ("Press Q to leave Echo here." if s.player == s.level["plate"]
+                    else "Step onto the Moonlight plate."), s.level["plate"], 0
         if not s.plate_on():
-            return "门还锁着！回蓝色世界踩住踏板，再按 Q。", s.level["plate"], 0
-        return "Echo 正在计步！向右赶路，穿过粉色门。", s.level["gate"], 1
+            return "Return to the plate. Press Q.", s.level["plate"], 0
+        return "Echo is fading. Cross the gate.", s.level["gate"], 1
     if s.index == 2:
         if not s.plate_on():
             if s.world == 1:
-                return "桥还没出现，先回蓝色世界推动石头。", s.level["plate"], 0
-            return "站到石头左侧，向右推到黄色踏板。", s.level["plate"], 0
+                return "Return to Moonlight. Push the stone.", s.level["plate"], 0
+            return "Push the stone right onto the plate.", s.level["plate"], 0
         if s.world == 0:
-            return "机关已触发！按 Q，去粉色世界走新桥。", s.level["plate"], 0
-        return "粉色桥已出现，沿桥前往右侧出口。", s.level["exit"], 1
+            return "Bridge ready. Press Q.", s.level["plate"], 0
+        return "Cross the bridge toward the exit.", s.level["exit"], 1
     if s.index == 3:
         if not s.lit:
-            return ("先回蓝色世界点灯，再来粉色世界。" if s.world == 1
-                    else "靠近蓝色小灯按 E，先点亮粉色桥。"), s.level["lantern"], 0
+            return ("Return to Moonlight. Light the lamp." if s.world == 1
+                    else "Press E beside the lamp."), s.level["lantern"], 0
         if s.world == 0:
-            return "再站上黄色踏板按 Q，留下 Echo 开门。", s.level["plate"], 0
-        return "桥和门已准备好，赶快向右通关。", s.level["exit"], 1
+            return "Press Q while standing on the plate.", s.level["plate"], 0
+        return "Bridge ready. Move right.", s.level["exit"], 1
     if s.world == 0:
         if s.plate_on():
-            return "粉色残影已经开门，沿蓝色道路去出口。", s.level["exit"], 0
-        return "蓝色走到断口，按 Q 转入粉色世界。", (5, 4), 0
-    return "去粉色踏板上按 Q，把残影留在那里。", s.level["plate"], 1
+            return "Echo holds the gate. Reach the exit.", s.level["exit"], 0
+        return "Reach the gap. Press Q.", (5, 4), 0
+    return "Press Q while standing on the plate.", s.level["plate"], 1
 
 
 def solution_hint(state):
@@ -385,11 +372,11 @@ def execute(state, action):
     if action == "q":
         w = 1 - state.world
         if not state.passable(state.player, w):
-            return False, "That spot is solid in the other world. Move before shifting.", False, False
+            return False, "That spot is solid elsewhere. Move first.", False, False
         state.echo = (state.world, *state.player, 10)
         state.world = w
         collected = state.collect()
-        return True, "An echo stays where you shifted. It fades after 10 steps.", state.exit_reached(), collected
+        return True, "Echo stays here for ten moves.", state.exit_reached(), collected
 
     if action == "e":
         lamp = state.level["lantern"]
@@ -411,9 +398,9 @@ def execute(state, action):
             # Prevent the soft-lock seen in playtesting: stone can no longer
             # be pushed past the plate or into a corner with no way back.
             if state.stone == state.level["plate"]:
-                return False, "石头已经卡进机关！按 Q 去粉色世界。", False, False
+                return False, "Stone locked. Press Q.", False, False
             if dx != 1 or pushed[0] > state.level["plate"][0]:
-                return False, "从石头左边向右推，目标是黄色踏板。", False, False
+                return False, "Push from the left toward the plate.", False, False
         if not state.floor(pushed, 0) or pushed == state.level["gate"]:
             return False, "The stone cannot move that way.", False, False
         state.stone = pushed
@@ -421,7 +408,7 @@ def execute(state, action):
         if target == state.level["gate"]:
             return False, "The door needs pressure from the OTHER world.", False, False
         if target in state.level["bridge"]:
-            return False, "There should be a bridge here. Find what makes it appear.", False, False
+            return False, "Bridge missing. Find its trigger.", False, False
         return False, "No path here. Look at the other world's map.", False, False
     state.player = target
     state.moves += 1
@@ -496,7 +483,7 @@ def sound(key):
 
 def message(msg, frames=160):
     global notice, notice_ttl, notice_duration
-    frames = min(frames, 180)
+    frames = NOTICE_TOTAL_FRAMES
     notice, notice_ttl, notice_duration = msg, frames, frames
 
 
@@ -538,7 +525,7 @@ def player_action(action):
     changed, feedback, completed, collected = execute(current, action)
     if changed:
         if hint_level >= 3:
-            hint_text = "已前进一步。再按 H 查看新的下一步。"
+            hint_text = "Progress made. Press H for another hint."
         else:
             hint_text = ""
         history.append(old)
@@ -569,15 +556,15 @@ def player_action(action):
         # Player receives meaningful visual + text feedback when a cross-world
         # dependency is solved, not just an invisible boolean update.
         if current.index == 2 and not old.plate_on() and current.plate_on():
-            message("成功！石头压住机关，粉色世界的桥出现了！按 Q 切换。", 310)
+            message("Stone locked. Shadow bridge ready.")
             spark_at(current.stone, 42)
         elif current.index == 3 and not old.lit and current.lit:
-            message("灯亮了！粉色世界已经出现新的桥。下一步找踏板。", 300)
+            message("Lamp lit. Shadow bridge ready.")
         elif (action == "q" and current.echo is not None and
               current.level["plate"] == current.echo[1:3] and current.plate_on()):
-            message("Echo 压住机关！门已经打开，快向右走！", 240)
+            message("Echo holds the plate. Gate open.")
         elif collected:
-            message("找到隐藏的记忆碎片！", 200)
+            message("Hidden memory found!")
         elif feedback:
             message(feedback, 145)
         if completed:
@@ -834,7 +821,7 @@ def draw_play():
     draw_play_ui()
 
 
-def draw_floating_prompt(text, y, alpha=255, font_obj=C17, colour=(255, 232, 184)):
+def draw_floating_prompt(text, y, alpha=255, font_obj=F16, colour=(255, 232, 184)):
     """Centered text with only a restrained shadow—never a panel or tab."""
     if not text or alpha <= 0:
         return
@@ -868,15 +855,16 @@ def draw_play_ui():
 
     # The other-world map stays compact and clear of the Echo counter.
     draw_mini_world(850,18,170)
-    put_text(s.level["subtitle"],OX,116,F14,MUTED)
     put_text(f"MEMORIES  {len(memories)} / 5",790,116,F12,GOLD)
 
-    task, target, target_world = guide_goal(s)
-    draw_floating_prompt("下一步 / NEXT: " + task,657,225,C17)
     if notice_ttl > 0 and notice_duration > 0:
         elapsed=notice_duration-notice_ttl
-        fade=min(1.0,elapsed/15.0,notice_ttl/30.0)
-        draw_floating_prompt(notice[:50],684,round(255*fade),C14,(255,240,205))
+        fade=min(
+            1.0,
+            elapsed/NOTICE_FADE_IN_FRAMES,
+            notice_ttl/NOTICE_FADE_OUT_FRAMES,
+        )
+        draw_floating_prompt(notice[:50],681,round(255*fade),F14,(255,240,205))
     put_text("WASD move  ·  Q shift  ·  E interact  ·  G guide  ·  H hint  ·  Z undo  ·  R restart",
              WIDTH//2,710,F12,(173,182,204),True)
 
@@ -894,19 +882,19 @@ def draw_guide():
     pygame.draw.circle(screen,LIGHT,(x+57,y+62),24,3)
     pygame.draw.circle(screen,SHADOW,(x+113,y+62),24,3)
     pygame.draw.line(screen,GOLD,(x+81,y+62),(x+90,y+62),3)
-    put_text("ROOM GUIDE / 关卡指南",x+154,y+49,C20,WHITE)
-    put_text(guide["title"],x+45,y+108,C26,GOLD)
-    put_text("目标  " + guide["goal"],x+45,y+160,C20,WHITE)
+    put_text("ROOM GUIDE",x+154,y+49,F20,WHITE)
+    put_text(guide["title"],x+45,y+108,F26,GOLD)
+    put_text("GOAL  " + guide["goal"],x+45,y+160,F20,WHITE)
     for i,step in enumerate(guide["steps"]):
         yy=y+214+i*58
         pygame.draw.circle(screen,LIGHT if i%2==0 else SHADOW,(x+60,yy+11),17)
         put_text(str(i+1),x+60,yy+11,F20,(18,28,48),True)
-        put_text(step,x+94,yy,C17,WHITE)
+        put_text(step,x+94,yy,F16,WHITE)
     rounded((x+40,y+409,w-80,45),(34,45,74),10)
-    put_text("关键规则：" + guide["rule"],x+53,y+421,C14,(193,218,237))
+    put_text("RULE: " + guide["rule"],x+53,y+421,F14,(193,218,237))
     rounded((x+160,y+468,w-320,40),(56,84,102),12,(113,202,222),1)
-    put_text("按 Enter 开始  /  G 关闭",x+w/2,y+488,C17,WHITE,True)
-    put_text("H 提示  ·  Z 撤销  ·  R 重来",x+w/2,y+455,C14,MUTED,True)
+    put_text("ENTER START  /  G CLOSE",x+w/2,y+488,F16,WHITE,True)
+    put_text("H HINT  ·  Z UNDO  ·  R RESTART",x+w/2,y+455,F14,MUTED,True)
 
 
 
@@ -1037,21 +1025,21 @@ while running:
             elif k == pygame.K_h:
                 guide_open = False
                 hint_level = 0
-                hint_text = "已关闭教程。再按 H 看第一条提示。"
+                hint_text = "Guide closed. Press H for a hint."
             continue
         if k==pygame.K_r:
             begin(current.index)
         elif k==pygame.K_h:
             if hint_level == 0:
-                hint_text = "线索 1：" + GUIDES[current.index]["short"]
+                hint_text = "HINT 1: " + GUIDES[current.index]["short"]
             elif hint_level == 1:
-                hint_text = "线索 2：" + GUIDES[current.index]["steps"][-1]
+                hint_text = "HINT 2: " + GUIDES[current.index]["steps"][-1]
             else:
                 move, distance = solution_hint(current)
                 if move:
-                    hint_text = f"下一步：按 {KEY_ZH[move]}（按 H 可继续查看）。"
+                    hint_text = f"NEXT: {KEY_LABELS[move]}. Press H again."
                 else:
-                    hint_text = "暂时找不到可行路线，按 Z 撤销或 R 重来。"
+                    hint_text = "No route. Press Z or R."
             hint_level += 1
             message(hint_text, 180)
         elif k in (pygame.K_z, pygame.K_BACKSPACE):

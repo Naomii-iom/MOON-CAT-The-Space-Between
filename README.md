@@ -9,7 +9,7 @@ which paths, bridges, doors, and mechanisms can be used.
 
 The final submission version is located in [`mooncat_meteorite_tiles/`](mooncat_meteorite_tiles/).
 
-![MOON CAT gameplay](mooncat_meteorite_tiles/screenshots/foreground_contrast_update.png)
+![MOON CAT gameplay](mooncat_meteorite_tiles/screenshots/level1_english_ui.png)
 
 ## Project Overview
 
@@ -86,11 +86,11 @@ installs the locked `pygame-ce` dependency from `uv.lock`.
 
 ### Full-screen puzzle view
 
-![Full-screen puzzle view](mooncat_meteorite_tiles/screenshots/fullscreen_readability_update.png)
+![Full-screen puzzle view](mooncat_meteorite_tiles/screenshots/level1_english_ui.png)
 
 ### Room 3 pushable stone
 
-![Room 3 stone](mooncat_meteorite_tiles/screenshots/room3_new_stone.png)
+![Room 3 stone](mooncat_meteorite_tiles/screenshots/level3_english_ui.png)
 
 ### Echo remaining-move HUD
 
@@ -111,8 +111,6 @@ installs the locked `pygame-ce` dependency from `uv.lock`.
 - The most recent submission build is verified as a desktop pygame-ce project.
   An older Pygbag web experiment exists in the repository, but there is no
   current hosted live-demo URL, so no live-demo claim is made here.
-- Chinese guidance uses installed system CJK fonts; appearance may vary between
-  operating systems.
 - Visual source files were supplied through the project workflow. Their right
   to be redistributed commercially has not been independently verified; this
   repository is presented as coursework.

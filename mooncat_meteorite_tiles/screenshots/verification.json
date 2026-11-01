@@ -409,8 +409,8 @@
     }
   },
   "offscreen_render_ms": {
-    "median": 0.97,
-    "p95": 1.108
+    "median": 0.895,
+    "p95": 1.047
   },
   "limits": [
     "Offscreen timing is a regression indicator, not a native-window or browser FPS measurement.",
