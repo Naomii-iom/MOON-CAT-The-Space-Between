@@ -1,10 +1,10 @@
 [project]
 name = "mooncat"
 version = "0.1.0"
-description = "Add your description here"
+description = "A dual-world puzzle game built with pygame-ce"
 readme = "README.md"
 authors = [
-    { name = "Liu Yuchen", email = "yuchen0221.liu@connect.polyu.hk" }
+    { name = "Liu Yuchen" }
 ]
 requires-python = ">=3.14"
 dependencies = [
