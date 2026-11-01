@@ -51,6 +51,11 @@ class WorldBackgrounds:
             source = pygame.image.load(str(path)).convert()
             self.source_sizes.append(source.get_size())
             scene, crop = _cover(source, size)
+            # Darken the cached landscape once so bright gameplay elements stay
+            # readable without adding a board-shaped mask or changing the art.
+            dimmer = pygame.Surface(size, pygame.SRCALPHA)
+            dimmer.fill((7, 5, 15, 92))
+            scene.blit(dimmer, (0, 0))
             self.scenes.append(scene)
             self.crop_rects.append(crop)
 
