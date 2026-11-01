@@ -37,6 +37,7 @@ class MeteoriteTiles:
         self.group_span = group_span
         self.loaded_files: list[Path] = []
         self.sprites: dict[int, dict[str, pygame.Surface]] = {0: {}, 1: {}}
+        self.edges: dict[int, dict[str, pygame.Surface]] = {0: {}, 1: {}}
         self.previews: dict[int, dict[str, pygame.Surface]] = {0: {}, 1: {}}
         self._phase_cache: dict[tuple[int, frozenset[tuple[int, int]]], dict[tuple[int, int], float]] = {}
         preview_colours = ((104, 215, 243), (247, 132, 176))
@@ -44,8 +45,8 @@ class MeteoriteTiles:
         self.shadow = pygame.Surface((tile_size, tile_size + 6), pygame.SRCALPHA)
         pygame.draw.ellipse(
             self.shadow,
-            (4, 7, 20, 28),
-            (round(tile_size * 0.16), round(tile_size * 0.76), round(tile_size * 0.68), 6),
+            (3, 6, 18, 44),
+            (round(tile_size * 0.14), round(tile_size * 0.74), round(tile_size * 0.72), 8),
         )
 
         for world, folder in enumerate(self.WORLD_NAMES):
@@ -58,20 +59,44 @@ class MeteoriteTiles:
                 # Scale exactly once.  Nearest-neighbour keeps the soft pixel art
                 # legible and avoids per-frame image work.
                 sprite = pygame.transform.scale(source, (tile_size, tile_size)).convert_alpha()
+                if kind.startswith("normal_"):
+                    sprite.fill(
+                        (9, 12, 18, 0) if world == 0 else (8, 7, 12, 0),
+                        special_flags=pygame.BLEND_RGBA_ADD,
+                    )
                 self.sprites[world][kind] = sprite
+                self.edges[world][kind] = self._make_edge(
+                    sprite,
+                    (132, 205, 235) if world == 0 else (184, 151, 205),
+                    kind.startswith("normal_"),
+                )
                 self.previews[world][kind] = self._make_preview(sprite, preview_colours[world])
+
+    @staticmethod
+    def _make_edge(
+        sprite: pygame.Surface,
+        colour: tuple[int, int, int],
+        visible: bool,
+    ) -> pygame.Surface:
+        edge = pygame.Surface(sprite.get_size(), pygame.SRCALPHA)
+        if not visible:
+            return edge
+        outline = pygame.mask.from_surface(sprite, 48).outline()
+        if len(outline) > 2:
+            pygame.draw.lines(edge, (*colour, 108), True, outline, 1)
+        return edge
 
     @staticmethod
     def _make_preview(sprite: pygame.Surface, colour: tuple[int, int, int]) -> pygame.Surface:
         """Create a cached faint silhouette for tiles that exist in the other world."""
         mask = pygame.mask.from_surface(sprite, 48)
         preview = mask.to_surface(
-            setcolor=(*colour, 30),
+            setcolor=(*colour, 7),
             unsetcolor=(0, 0, 0, 0),
         ).convert_alpha()
         outline = mask.outline()
         if len(outline) > 2:
-            pygame.draw.lines(preview, (*colour, 92), True, outline, 1)
+            pygame.draw.lines(preview, (*colour, 118), True, outline, 1)
         return preview
 
     @staticmethod
@@ -183,6 +208,7 @@ class MeteoriteTiles:
         # quiet sense of depth without looking like a glow or separate platform.
         target.blit(self.shadow, (x, y + round(y_offset * 0.2)))
         target.blit(self.sprites[world][kind], (x, y + y_offset))
+        target.blit(self.edges[world][kind], (x, y + y_offset))
 
     def draw_preview(
         self,

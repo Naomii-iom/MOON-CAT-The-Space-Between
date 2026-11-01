@@ -33,6 +33,25 @@ clock = pygame.time.Clock()
 
 ART_ROOT = Path(__file__).resolve().parent / "assets"
 BOARD_RECT = pygame.Rect(OX-13, OY-13, COLS*TILE+26, ROWS*TILE+26)
+BOARD_VIGNETTE_RECT = BOARD_RECT.inflate(140, 100)
+
+
+def make_board_vignette(size):
+    """Cached soft superellipse: darkens detail without drawing a panel edge."""
+    small = pygame.Surface((120, 76), pygame.SRCALPHA)
+    width, height = small.get_size()
+    for y in range(height):
+        dy = abs((y + 0.5) / height * 2 - 1)
+        for x in range(width):
+            dx = abs((x + 0.5) / width * 2 - 1)
+            distance = (dx**4 + dy**4) ** 0.25
+            fade = max(0.0, min(1.0, (1.0 - distance) / 0.28))
+            fade = fade * fade * (3.0 - 2.0 * fade)
+            small.set_at((x, y), (4, 7, 20, round(76 * fade)))
+    return pygame.transform.smoothscale(small, size).convert_alpha()
+
+
+BOARD_VIGNETTE = make_board_vignette(BOARD_VIGNETTE_RECT.size)
 BACKGROUNDS = WorldBackgrounds(
     ART_ROOT / "backgrounds" / "moonlight.png",
     ART_ROOT / "backgrounds" / "shadow.png",
@@ -638,14 +657,7 @@ def draw_board():
     s = current
     p = world_palette(s.world)
     brect = BOARD_RECT
-    BACKGROUNDS.draw_board(screen, s.world)
-    pygame.draw.rect(
-        screen,
-        (62,83,104) if s.world==0 else (128,67,106),
-        brect,
-        2,
-        border_radius=20,
-    )
+    screen.blit(BOARD_VIGNETTE, BOARD_VIGNETTE_RECT)
     now_ms = pygame.time.get_ticks()
     now = now_ms/1000
     shake_x = random.randint(-2,2) if shakes else 0
@@ -839,8 +851,7 @@ def draw_play_ui():
     """Minimal full-screen HUD; the enlarged board remains the visual focus."""
     s=current
     p=world_palette(s.world)
-    put_text("MOON CAT",34,20,F26,WHITE)
-    put_text(s.level["name"],360,22,F14,WHITE,True)
+    put_text(s.level["name"],34,28,F16,WHITE)
     pill(309,52,"MOONLIGHT",s.world==0,LIGHT)
     pill(408,52,"SHADOW",s.world==1,SHADOW)
     put_text("Q  SHIFT",510,59,F14,p["accent"])
