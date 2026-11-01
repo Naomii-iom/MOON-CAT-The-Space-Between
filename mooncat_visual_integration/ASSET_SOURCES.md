@@ -1,25 +1,13 @@
 # Asset Sources and Rights Notes
 
-## User-provided source files
-
-| Source copy | Role | Technical treatment |
+| Source copy | My use | Technical treatment |
 |---|---|---|
-| `assets/source/moonlight_background_original.png` | Moonlight World background | Exact copy; runtime cover-scale and centered crop only |
-| `assets/source/shadow_background_original.png` | Shadow World background | Exact copy; runtime cover-scale and centered crop only |
-| `assets/source/cat_sprite_sheet_original.png` | Cat animation source | Exact copy; deterministic crop, transparent padding and shared foot anchor |
+| `assets/source/moonlight_background_original.png` | Moonlight background | Exact source copy; cover-scale and centred crop |
+| `assets/source/shadow_background_original.png` | Shadow background | Exact source copy; cover-scale and centred crop |
+| `assets/source/cat_sprite_sheet_original.png` | Cat animation | Exact source copy; deterministic crop, transparent padding, and shared foot anchor |
 
-The source files were supplied by the user in this conversation as the approved visual direction. No online game assets were downloaded or copied for this build.
+I selected these files as the approved visual direction. I did not download online game assets for this build. I kept the background files unchanged and did not repaint or regenerate the cat pixels.
 
-The game-ready background files in `assets/backgrounds/` are byte-for-byte copies of the supplied backgrounds. The frames in `assets/characters/cat/` retain the supplied pixels and alpha; they were not repainted or regenerated.
+I recorded provenance but cannot independently verify authorship or commercial licensing. I would confirm redistribution rights before a public commercial release.
 
-## Rights status
-
-The integration records provenance but cannot independently verify authorship, exclusivity, or commercial licensing of user-supplied files. Before public or commercial distribution, the user/rightsholder should confirm that all three source images may be redistributed in the game.
-
-## AI and tooling disclosure
-
-- Integration code and documentation were assisted by OpenAI Codex.
-- No image-generation model was used to redraw these three assets in this version.
-- Pygame performed deterministic sprite extraction and runtime rendering.
-- Pillow assembled GIF previews from frames rendered by the actual Pygame build.
-- Pygbag 0.9.3 provided the browser QA runtime.
+I used Codex for integration and documentation assistance, pygame for deterministic extraction and rendering, Pillow for preview GIFs, and Pygbag 0.9.3 for browser QA.

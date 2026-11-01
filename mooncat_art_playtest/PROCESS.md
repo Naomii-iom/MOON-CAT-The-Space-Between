@@ -1,63 +1,15 @@
-# MOON CAT 美术过程记录
+# MOON CAT — Moonlight Art Experiment
 
-日期：2026-10-27（Asia/Shanghai）。当前只完成第一阶段，等待用户确认视觉方向。
+I made this early experiment to test whether a paper-collage night background could support the puzzle without hiding the route.
 
-## 代码与环境检查
+## Process
 
-- 实际项目已从旧地址移到 `/Users/liuyuchen/Desktop/POLYU/mooncat/`。
-- 已检查根目录 main.py 与 Guided v1.0 备份；本次独立版本从稳定备份复制。
-- 原画布 1060×735、44px 格子、15×9 地图，棋盘位置 (51,174)。尺寸和位置没有改变。
-- 原 `draw_backdrop()` 用星点和圆形绘制背景，原 `draw_board()` 用不透明底板遮挡背景；原版没有外部图片加载器。
-- 所以仅新增背景加载模块、月光背景绘制入口和棋盘底纹入口，其余绘制保持原样。
+1. I copied Guided v1.0 into an independent folder.
+2. I generated one original Moonlight background from the prompt stored beside the image.
+3. I loaded and scaled the image once at startup.
+4. I kept the board centre quiet so the cat, route, and exit remained readable.
+5. I left gameplay and save logic unchanged.
 
-## 美术方向与判断
+I used an image-generation tool for this background experiment and recorded the prompt. I used Codex to assist with integration, checks, and documentation. I later chose a different supplied background direction for the final game, so this folder remains process evidence rather than the submission build.
 
-视觉参考来自用户指定的 Betty & Earl 的纸张拼贴/手工剪纸语言，项目官方页面仅用于了解参考背景：[Giant Light Studios / Betty & Earl](https://giantlight.itch.io/betty-and-earl)。没有下载、裁剪或使用原作素材。
-
-本次生成提示词使用纸纤维、剪刀边缘、低对比的分层森林和有限几何形状来描述材质，没有要求复刻原作画面。
-
-- 底色是深蓝灰旧纸，月亮是小面积奶油色纸片。
-- 月亮放在房间标题与右侧世界按钮之间的既有空隙；不会和出口位置重合。
-- 森林主要位于边缘和底部，中央留作低对比的暗场。
-- 不画小猫、人物、道路、地砖、出口、建筑或 UI；这些仍由游戏逐帧绘制。
-- 棋盘背景从同一张图截取，叠一层 (10,22,43,92) 暗色纸罩，保证场景连续但不压过原有道路。
-- 新背景静止，不增加闪烁、视差、粒子或过渡动画。原有 Q 闪光逻辑未改。
-
-## AI 使用记录
-
-- 工具：Codex 内置 imagegen；不是命令行 API，也未要求用户提供 API Key。
-- 输入：文字提示词；没有上传、引用或编辑 Betty & Earl 的游戏图片。
-- 本次调用生成一张原创环境素材：`assets/backgrounds/moonlight_paper_v1.png`。
-- 完整最终提示词保存在 `assets/backgrounds/moonlight_prompt.txt`。
-- 初始工具输出：`/Users/liuyuchen/.codex/generated_images/01a121a1-b806-7172-884f-f6124380d5c8/exec-9f7ce28b-1a13-43d9-95bc-c90d6e883a92.png`。
-- 工具输出原图为 1536×1024 RGB PNG，约 2.7 MB，无 Alpha（本资产本来就是不透明底图）。按原样复制到项目，没有用 Python 或其他工具重绘/修图。
-- 图片缩放与棋盘裁切在 Pygame 初始化时执行，不写回 PNG。
-- 素材 SHA-256：`9b0e26f3dcf41df16ea763f0bd287133dcae4b276044368772b153c3593737df`。
-- 人工/代理工作：构图约束、提示词编写、挑选检查、背景接入、遮罩和暗化参数、代码回归、实际游戏操作与文档记录。
-
-## 来源与授权记录
-
-- 背景：本次内置图像生成工具新生成，无第三方图库或游戏截图素材。
-- 角色、UI、地图、原音效：沿用用户项目中的 Guided v1.0 代码，没有新增下载资源。
-- 桌面字体：沿用原版的系统字体选择；没有把 macOS PingFang 复制进项目。
-- 浏览器 QA 字体：复用上一版网页测试的 Noto Sans CJK SC，字体与 OFL 许可证均包含在测试构建的归档内；来源为 [Noto CJK](https://github.com/notofonts/noto-cjk)，许可证为 [SIL OFL 1.1](https://github.com/notofonts/noto-cjk/blob/main/Sans/LICENSE)。
-- 浏览器运行时：Pygbag 0.9.3 官方 CDN；仅用于本地 QA，没有上线或发布。
-
-以上是素材来源记录，不代表把 AI 生成素材标注成人工绘制，也未将第三方素材重新许可为项目原创。
-
-## 验证记录
-
-1. `tools/check_art.py` 对比基准与本次代码 AST：背景以外的所有地图、玩法、输入、存档和 UI 函数一致。
-2. 固定时间/状态的像素对比：UI 面板内部、道路、小猫、出口抽检区域一致。
-3. PNG 加载计数：180 帧中一次；画布尺寸 1060×735。
-4. 缓存圆角层透明边缘与内部 Alpha 正确。完整背景是有意不透明的 RGB 文件。
-5. Pygame 离屏渲染约 0.89 ms 中位数、1.26 ms 95 分位；没有把该数值换算成完整游戏帧率。
-6. 原生 macOS 窗口：当前执行环境中启动失败。系统报告发生在 Cocoa/应用注册；故没有原生窗口截图或成功声明。
-7. Pygbag 真实浏览器：进入游戏，关闭原指南，检查新月光背景，实际按 W/D/Q/Z/R，确认背景随游戏世界恢复；没有捕获到 Python Traceback。
-8. `moonlight_live_browser.jpg` 是浏览器实际运行截图；`moonlight_offscreen_render.png` 是原桌面字体的离屏渲染，两者名称与说明分开。
-
-## 后续阶段
-
-- 第一阶段：月光图、背景接入、真实浏览器运行截图与检查已完成，等待用户确认风格。
-- 第二阶段：确认后再制作同构图的暗紫/褪粉剪纸背景；届时 Q 将同步切换两套新背景。
-- 第三阶段：双世界配对完成后继续做完整可读性、性能与资源路径检查，并补充本记录。第一阶段已先记录本轮素材来源和测试，避免遗漏过程。
+I tested movement, world shifting, undo, restart, and browser rendering. The browser test used an async loop and a bundled font only in its QA copy.

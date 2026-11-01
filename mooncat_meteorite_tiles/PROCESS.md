@@ -1,59 +1,39 @@
-# MOON CAT — Meteorite Tile Integration Process
+# MOON CAT — Final Visual Integration Process
 
-## 1. 锁定基准
+## Baseline
 
-- 实际项目：`/Users/liuyuchen/Desktop/POLYU/mooncat/`
-- 修改基准：`mooncat_visual_integration`
-- 稳定逻辑基准：`backups/MOON_CAT_Guided_v1.py`
-- 分辨率：1060 × 735
-- 地图：15 × 9，地砖 44 px，原点 `(51, 174)`
-- 小猫显示画布：64 × 52
-- 改动前备份：`backups/MOON_CAT_Visual_Integration_Pre_Meteorites_2026-10-27.zip`
+I built this version from my visual-integration branch while keeping Guided v1.0 as the stable logic reference. I did not overwrite the baseline, existing saves, or earlier backups.
 
-原版本、Guided v1.0 与根目录存档均未覆盖。
+The logical board remains 15 × 9. I later enlarged the presentation to 54 px tiles and a 74 × 60 cat canvas without changing map coordinates or collision.
 
-## 2. 素材处理
+## Meteorite Tiles
 
-原图 1774 × 887 RGBA，并不是统一网格。脚本先按真实不透明连通区域测量，选择六个质量稳定的形态，再进行：
+The supplied sheet was not a regular grid. I measured the visible shapes, selected six clean forms, removed coloured edge contamination, cropped to the real alpha bounds, and centred each form on a 64 × 64 transparent canvas. I made Moonlight and Shadow colour variants from the same silhouettes.
 
-1. 在每个测量矩形外保留 10 px 安全边缘；
-2. 删除电光洋红/蓝色杂边；
-3. 只保留最大主体及 3 px 抗锯齿边缘；
-4. 裁至真实 Alpha 边界；
-5. 等比缩放并居中到 64 × 64 透明画布；
-6. 依据原图明度映射灰蓝与灰紫/褪粉两套色阶。
+At runtime I cache twelve tile images. A fixed formula based on room and coordinate chooses each variant, so the layout stays stable. Goal and special symbols are drawn above the tile art, and game logic still comes from the original state functions.
 
-没有生成、补画或锐化石头。`source_cutouts/` 保留清理后的中性源形态；精确裁切矩形和调色板位于 `selection_manifest.json`。
+## Floating Motion
 
-## 3. 运行时集成
+I added a slow sine-wave offset of about ±1.5 px over 3.4 seconds. Nearby tiles share small phase groups so the route feels connected. The animation changes drawing only; it never changes logical coordinates, collision, or puzzle state. The cat and mechanism overlays use the same visual offset.
 
-`MeteoriteTiles` 在初始化时读取月光/暗影各 6 张 PNG，并一次性缩放到 44 × 44。贴图种类由 `room_index`、`x`、`y` 的固定公式决定，普通 A/B/C/D 目标比例为 75/10/10/5。实际五关普通地面统计为 94/9/10/6，Normal A 占 78.99%。
+## Final UI Pass
 
-出口只在它所属世界使用 Goal 底砖；踏板、门与灯使用 Special 底砖，所有原有交互图标继续画在上层。另一世界道路使用预先缓存的低透明度蒙版和轮廓。碰撞仍完全由 `State.floor()` 和 `execute()` 决定。
+I removed the large centre frame and split side panel, enlarged the map, darkened both backgrounds, and used clearer tile edges and shadows. Other-world paths are now low-opacity outlines. I changed the interface and contextual messages to English and made short hints fade over the scene without a box.
 
-漂浮是纯绘制偏移：默认幅度 ±1.5 px，周期 3.4 秒，使用 `pygame.time.get_ticks()` 驱动正弦波。两个世界地面取并集后做 BFS，每四格距离共享一个相位，相邻组只差 0.16 弧度；所以道路整体呼吸，但不会像独立方块一样互相错开。相位只由关卡与坐标决定，不读取当前世界，因此 Q 过渡前后连续。地砖下方使用缓存的 28 Alpha 椭圆阴影。
+## Room 3 Stone
 
-`visual_tile_center()` 只用于绘制机关、出口、桥、Echo、记忆、提示环和角色；`tile_center()`、`State.player`、碰撞和移动仍使用原逻辑坐标。三个常量可直接调节或关闭：`FLOAT_TILES_ENABLED`、`FLOAT_TILES_AMPLITUDE`、`FLOAT_TILES_PERIOD_SECONDS`。
+I processed the supplied stone into a transparent PNG and centred it inside one tile. I changed only its rendering. Pushing, collision, plate activation, coordinates, and the cross-world bridge rule remain unchanged.
 
-## 4. 验证
+## Testing
 
-`tools/check_meteorite_tiles.py` 已执行：
+I used automated checks and rendered playtests to verify:
 
-- `ROOMS`、`GUIDES`、`State`、`execute`、提示、存档函数与修改前基准 AST 一致；
-- 五关状态空间搜索全部找到解；
-- 背景和 20 张小猫 PNG 与修改前基准逐文件 SHA-256 一致；
-- 12 张地砖均为 64 × 64 RGBA，透明范围 0–255；
-- 相同形态的两世界 Alpha 字节完全一致；
-- 启动加载 34 张 PNG，连续 180 帧后仍为 34 次；
-- 合法/非法 Q 与世界切换渲染通过；
-- 漂浮采样未超过 ±2 个整数像素，相邻道路最大差 1 px；完整周期首尾一致；Q 前后同坐标相位一致；关闭测试归零；
-- 离屏 180 帧中位绘制约 0.59 ms（只作回归参考，不代表浏览器 FPS）。
+- all five rooms remain solvable;
+- protected puzzle and save functions are unchanged;
+- Moonlight and Shadow variants share their silhouettes;
+- all assets have valid alpha;
+- 35 PNG files load at startup and are not reloaded each frame;
+- floating motion stays within its visual limit and remains continuous through `Q`;
+- movement, stone pushing, plate activation, Echo expiry, undo, and restart still work.
 
-浏览器验证另记于 `screenshots/browser_test_result.json`。真实浏览器截图不得替代或伪装成概念图。
-
-## 5. AI 与工具记录
-
-- OpenAI Codex 协助代码、验证和文档。
-- 已阅读图像处理工作流；因为用户要求严格保留原陨石造型，没有调用图像生成模型。
-- Pillow 仅执行确定性的裁切、Alpha 清理、统一画布、调色与预览排版。
-- pygame-ce 执行真实游戏渲染；Pygbag 0.9.3 用于浏览器交互测试。
+I used Codex for implementation assistance, checks, and documentation. I used Pillow only for deterministic image processing. I did not use an image generator to redraw the meteorites or final stone.

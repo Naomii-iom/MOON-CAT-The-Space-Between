@@ -2,65 +2,51 @@
 
 **SD5913 Assignment 3 — Interaction Design Prototype**
 
-MOON CAT is a short, mechanism-driven puzzle game built with Python and
-pygame-ce. The player explores the same space in two connected states:
-Moonlight and Shadow. Pressing `Q` changes the active world, which changes
-which paths, bridges, doors, and mechanisms can be used.
+I made MOON CAT as a short puzzle game in Python and pygame-ce. I explore one space in two connected states: Moonlight and Shadow. Pressing `Q` changes the active world, so paths, bridges, doors, and mechanisms can change too.
 
-The final submission version is located in [`mooncat_meteorite_tiles/`](mooncat_meteorite_tiles/).
+My final submission version is in [`mooncat_meteorite_tiles/`](mooncat_meteorite_tiles/).
 
 ![MOON CAT gameplay](mooncat_meteorite_tiles/screenshots/level1_english_ui.png)
 
 ## Project Overview
 
-The prototype contains five compact puzzle rooms. Each room develops the same
-core idea instead of introducing unrelated controls: observe both worlds,
-choose where to move, shift at the correct location, and read the resulting
-change. Later rooms add a pushable stone, a pressure plate, a lantern, bridges,
-doors, and a temporary Echo left behind during a world shift.
+I built five compact puzzle rooms around one main idea. Instead of adding many unrelated controls, I ask the player to compare both worlds, choose where to move, and shift at the right location. Later rooms add a pushable stone, a pressure plate, a lantern, bridges, doors, and a temporary Echo.
 
 ## Intended Users
 
-The game is intended for players who enjoy exploration and light puzzle
-solving. It uses a small keyboard input set, progressive guidance, undo, and
-restart so that players can experiment without a harsh failure penalty.
+I designed the game for people who enjoy exploration and light puzzle solving. I kept the controls small and included progressive hints, undo, and restart so experimentation does not feel punishing.
 
 ## Core Interaction
 
-The player moves through a grid-based map and presses `Q` to shift between the
-Moonlight and Shadow worlds. The two worlds share coordinates but contain
-different walkable routes and mechanisms. Solving a room requires understanding
-how an action in one world changes access or state in the other.
+The player moves on a grid and presses `Q` to shift between Moonlight and Shadow. Both worlds use the same coordinates, but their walkable routes and mechanisms differ. A room is solved by understanding how an action in one world changes access or state in the other.
 
 ## Input → Response → Feedback
 
-The interaction loop is implemented directly in `mooncat_meteorite_tiles/main.py`:
+I implemented this loop in `mooncat_meteorite_tiles/main.py`:
 
-| Input | System response | Player feedback |
+| Input | System response | Visible feedback |
 |---|---|---|
-| `WASD` / arrow key | Validates the destination and moves the player or pushes the Room 3 stone | Cat movement animation, step/push sound, floating-tile alignment; invalid movement produces a shake, sound, and contextual message |
-| `Q` | Validates the corresponding coordinate, switches world, and leaves an Echo in the departed world | World crossfade, accent-colour change, altered roads, Echo sprite, sound, and updated HUD |
-| `E` | Interacts with the lantern in Room 4 when the player is in the correct position and world | Lantern and bridge state change, particles, sound, and a short message |
-| Stone reaches plate | Activates the cross-world bridge dependency | Plate turns active, particles appear, and a message explains that the Shadow bridge is now available |
-| Echo expires | Removes the Echo after ten subsequent successful moves | `ECHO 07 / 10`-style counter decreases; at zero the Echo disappears and its pressure-plate effect ends |
-| `H`, `G`, `Z`, `R` | Reveals help, opens the room guide, undoes, or restarts | Progressive text hints, guide overlay, restored state, or reset room |
+| `WASD` / arrow key | Checks the destination and moves the cat or pushes the Room 3 stone | Cat animation, sound, and tile alignment; a failed move gives a shake, sound, and short message |
+| `Q` | Checks the matching coordinate, switches world, and leaves an Echo behind | World crossfade, colour change, new roads, Echo sprite, sound, and updated HUD |
+| `E` | Uses the Room 4 lantern from the correct position and world | Lantern and bridge changes, particles, sound, and a short message |
+| Stone reaches plate | Activates the cross-world bridge | Active plate art, particles, and a message that the Shadow bridge is available |
+| Echo expires | Removes the Echo after ten successful moves | The `ECHO 07 / 10` counter decreases; at zero, the Echo and its plate effect disappear |
+| `H`, `G`, `Z`, `R` | Shows help, opens the guide, undoes, or restarts | Progressive hints, a guide overlay, restored state, or a room reset |
 
-This makes the result of an action visible through the map, animation, sound,
-colour, HUD, and concise contextual text rather than relying on instructions
-alone.
+I use map changes, animation, sound, colour, the HUD, and short contextual text so the result of an action is easy to notice.
 
 ## Controls
 
 - `W`, `A`, `S`, `D` or arrow keys — move
-- `Q` — shift between Moonlight and Shadow; leave an Echo
-- `E` — interact with the Room 4 lantern
-- `H` — progressive hint
+- `Q` — shift worlds and leave an Echo
+- `E` — use the Room 4 lantern
+- `H` — show a progressive hint
 - `G` — open or close the room guide
 - `Z` or Backspace — undo one action
 - `R` — restart the current room
-- `Enter` or Space — start, close the guide, or continue after a solved room
-- `1`–`5` — select an unlocked room from the menu
-- `Esc` — return to the menu; press again from the menu to quit
+- Enter or Space — start, close the guide, or continue
+- `1`–`5` — select an unlocked room
+- Esc — return to the menu; press again to quit
 
 ## Installation and Running
 
@@ -70,8 +56,6 @@ alone.
 - [uv](https://docs.astral.sh/uv/)
 - Git
 
-Clone and run from a terminal:
-
 ```bash
 git clone https://github.com/Naomii-iom/MOON-CAT-The-Space-Between.git
 cd MOON-CAT-The-Space-Between
@@ -79,8 +63,7 @@ uv sync --frozen
 uv run python mooncat_meteorite_tiles/main.py
 ```
 
-`uv` reads `.python-version`, creates the local virtual environment, and
-installs the locked `pygame-ce` dependency from `uv.lock`.
+`uv` reads `.python-version`, creates a local environment, and installs the locked `pygame-ce` dependency from `uv.lock`.
 
 ## Screenshots
 
@@ -98,29 +81,19 @@ installs the locked `pygame-ce` dependency from `uv.lock`.
 
 ## Evidence and Documentation
 
-- [`PROCESS.md`](PROCESS.md) — concept, iteration, real user testing, design decisions, and reflection
+- [`PROCESS.md`](PROCESS.md) — my concept, iteration, real playtest, decisions, and reflection
 - [`CREDITS.md`](CREDITS.md) — authorship, tools, assets, licences, and AI disclosure
-- [`mooncat_meteorite_tiles/screenshots/verification.json`](mooncat_meteorite_tiles/screenshots/verification.json) — automated regression evidence
-- [`mooncat_meteorite_tiles/screenshots/browser_test_result.json`](mooncat_meteorite_tiles/screenshots/browser_test_result.json) — browser test record
+- [`verification.json`](mooncat_meteorite_tiles/screenshots/verification.json) — automated regression evidence
+- [`browser_test_result.json`](mooncat_meteorite_tiles/screenshots/browser_test_result.json) — browser test record
 
 ## Known Limitations
 
-- The implemented move constraint is the Echo's ten-move lifetime, not a
-  separate whole-level move cap. When the counter reaches zero, the Echo and
-  its mechanism effect disappear; the player is not forced into a game-over.
-- The most recent submission build is verified as a desktop pygame-ce project.
-  An older Pygbag web experiment exists in the repository, but there is no
-  current hosted live-demo URL, so no live-demo claim is made here.
-- Visual source files were supplied through the project workflow. Their right
-  to be redistributed commercially has not been independently verified; this
-  repository is presented as coursework.
+- I implemented a ten-move lifetime for each Echo, not a separate limit for the whole level. At zero, the Echo and its mechanism effect disappear; the room does not end.
+- I verified the latest submission as a desktop pygame-ce project. An older Pygbag experiment remains in the repository, but I do not currently have a hosted live demo.
+- I received the visual source files through my project workflow. I have not independently verified commercial redistribution rights, so I present this repository as coursework.
 
 ## Credits and AI Usage
 
-Game concept, interaction decisions, art selection, playtesting, and iteration
-were directed by **Liu Yuchen**. ChatGPT supported early discussion and design
-reflection. OpenAI Codex / Work assisted with programming, debugging, test
-automation, integration, documentation, and GitHub preparation. The student
-accepted, modified, or rejected suggestions based on playtesting and the goal
-of keeping the map readable. Full details are recorded in [`CREDITS.md`](CREDITS.md)
-and [`PROCESS.md`](PROCESS.md).
+I made the concept and interaction decisions, selected the art direction, ran the playtest, and chose the revisions. I used ChatGPT for early discussion and design reflection. I used OpenAI Codex / Work to help with programming, debugging, automated checks, asset integration, documentation, and GitHub preparation. I reviewed every suggestion and accepted, changed, or rejected it based on playtesting and my goal of keeping the map readable.
+
+I recorded the full details in [`CREDITS.md`](CREDITS.md) and [`PROCESS.md`](PROCESS.md).

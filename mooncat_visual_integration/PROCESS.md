@@ -1,75 +1,23 @@
-# MOON CAT — Art Integration Process
+# MOON CAT — Visual Integration Process
 
-## 1. Project inspection
+## Inspection and Preparation
 
-- Actual project: `/Users/liuyuchen/Desktop/POLYU/mooncat/`
-- Engine: Python 3.14.3 + pygame-ce 2.5.8
-- Stable logic baseline: `backups/MOON_CAT_Guided_v1.py`
-- Resolution: 1060 × 735
-- Board: 15 × 9 tiles, 44 px per tile, origin `(51, 174)`
-- Movement: discrete grid actions; visual interpolation did not change logical positions
-- World switch: `execute(state, "q")` remains the sole legality/collision authority
-- New save path: this independent folder's `mooncat-progress.json`
+I used Guided v1.0 as the stable logic reference. The game runs at 1060 × 735 with a 15 × 9 logical board. I copied the three supplied source images unchanged before processing them.
 
-## 2. Asset preparation
+I found sixteen coherent locomotion frames in the cat sheet: four each for front, right, left, and back. I excluded the later special poses from walking. I cropped the frames without repainting and aligned them to one foot anchor.
 
-The three supplied images were copied unchanged into `assets/source/` before processing.
+## Backgrounds and Cat
 
-The cat sheet is a real 1983 × 793 RGBA PNG. Its black-looking empty area has alpha 0; it was not a painted black background. Nineteen character-sized connected components were detected. The first sixteen form four coherent rows:
+I cover-scaled both backgrounds to the window and cropped them from the centre without stretching. I added a restrained dark wash behind the board for readability.
 
-- down/front: 4 frames
-- right: 4 frames
-- left: 4 frames
-- up/back: 4 frames
+I cached all cat frames at startup. I interpolated only the drawn position for 150 ms, while the original grid state stayed authoritative. A legal `Q` first passes the unchanged rule, then starts a short crossfade. I ignore extra input during that transition so state and visuals cannot race.
 
-Three later components (eyes-closed pose, paired cats and celebration pose) were deliberately excluded from locomotion. The included frames were cropped without repainting, placed on 256 × 208 transparent canvases, and aligned at a shared foot anchor `(128, 196)`. Exact source rectangles and SHA-256 hashes are in `assets/characters/cat/manifest.json`.
+## Verification
 
-## 3. Background integration
+I compared protected logic with Guided v1.0, solved all five rooms with state-space checks, counted image loads, rendered 180 frames without repeated disk reads, and tested legal and illegal world shifts. I also tested the Pygbag QA build with keyboard input and found no Python traceback.
 
-Both images use a cover strategy: preserve aspect ratio, scale until the 1060 × 735 window is covered, then crop equally from left and right.
+My restricted macOS GUI session could not create a native SDL window during this historical test, so I recorded that as an environment limit instead of claiming a desktop pass.
 
-- Moonlight source 1102 × 620 → crop rectangle `(123, 0, 1060, 735)` after scaling
-- Shadow source 1200 × 630 → crop rectangle `(170, 0, 1060, 735)` after scaling
+## AI and Tools
 
-The game board receives a cached translucent dark wash. This keeps the supplied atmosphere visible while preserving tile, exit and character contrast. UI cards remain opaque and are rendered last.
-
-## 4. Cat animation
-
-`CatSprites` loads and scales all frames once. The display canvas is 64 × 52; the visible cat is roughly one 44 px tile tall. Nearest-neighbour scaling preserves the supplied light pixel texture.
-
-`CatMotion` interpolates only the drawn position for 150 ms. `State.player` remains the authoritative grid position. New movement input starts from the current visual position, so held movement stays continuous without changing collision rules. Walking uses about 9.5 FPS; the front idle cycle uses 2 FPS. Side/back idle keeps the last facing frame.
-
-## 5. World transition
-
-A legal Q action first runs the unchanged `execute()` rule. Only after success does the presentation layer start a 520 ms smooth crossfade from the last world frame to the new authoritative world. A single low-opacity ring expands from the cat. Input is ignored during this short interval, preventing repeated Q from racing state and visuals. An illegal Q uses the original message, sound and restrained shake; it does not start a full transition.
-
-The UI is redrawn above the crossfade so labels do not double or blur.
-
-## 6. Regression evidence
-
-`tools/check_visual_integration.py` performs:
-
-- protected AST comparison against Guided v1.0
-- all-five-room state-space solve
-- input key presence check
-- sprite size/alpha validation
-- startup image-load counting
-- 180-frame no-reload check
-- legal and illegal Q checks
-- moonlight, midpoint and shadow renders
-
-The full report is `screenshots/verification.json`.
-
-The Pygbag browser build was then operated at the game's native 1060 × 735 viewport. Tested actions: Up, Down, Left, Right, H, Z, R, legal Q, illegal Q and two rapid Q presses. The second rapid Q was ignored during the transition and the game remained in Shadow, as intended. No Python Traceback appeared. See `screenshots/browser_test_result.json`.
-
-Native-window launch was attempted once. The agent's restricted macOS GUI session aborted during SDL `Cocoa_RegisterApp`, before the game window was created. This is recorded as an environment limitation rather than a game pass/fail result.
-
-## 7. AI/tool use and design decisions
-
-- OpenAI Codex assisted with code, tests and documentation.
-- The image-generation workflow was reviewed because this is an image task, but no image generator was invoked: the user's explicit instruction was to preserve the supplied assets rather than regenerate them.
-- Pygame performed exact pixel crop/padding and the actual render.
-- Pillow assembled preview GIFs from rendered frames.
-- Pygbag 0.9.3 enabled actual browser interaction testing.
-
-The generated paper-collage background from the earlier experiment is not used in this build.
+I used Codex to assist with code, tests, and documentation. I did not use an image generator for these three supplied assets because I wanted to preserve them. Pygame handled extraction and rendering, Pillow assembled preview GIFs, and Pygbag supported browser QA.
