@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Local system and Web build intermediates
+.DS_Store
+mooncat_web_demo/build/
+mooncat_web_demo/mooncat-web-progress.json

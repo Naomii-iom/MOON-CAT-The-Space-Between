@@ -6,6 +6,8 @@ I made MOON CAT as a short puzzle game in Python and pygame-ce. I explore one sp
 
 My final submission version is in [`mooncat_meteorite_tiles/`](mooncat_meteorite_tiles/).
 
+**Play the free Web demo:** [MOON CAT in your browser](https://naomii-iom.github.io/MOON-CAT-The-Space-Between/)
+
 ![MOON CAT gameplay](mooncat_meteorite_tiles/screenshots/level1_english_ui.png)
 
 ## Project Overview
@@ -86,10 +88,18 @@ uv run python mooncat_meteorite_tiles/main.py
 - [`verification.json`](mooncat_meteorite_tiles/screenshots/verification.json) — automated regression evidence
 - [`browser_test_result.json`](mooncat_meteorite_tiles/screenshots/browser_test_result.json) — browser test record
 
+## Web Demo
+
+I adapted the final five-room version for Pygbag without replacing the desktop edition. The Web source, build notes, browser test record, and itch.io upload package are in [`mooncat_web_demo/`](mooncat_web_demo/).
+
+- Browser build source: [`mooncat_web_demo/`](mooncat_web_demo/)
+- Browser test record: [`mooncat_web_demo/TEST_RESULTS.md`](mooncat_web_demo/TEST_RESULTS.md)
+- itch.io package: [`mooncat_web_demo/web.zip`](mooncat_web_demo/web.zip)
+
 ## Known Limitations
 
 - I implemented a ten-move lifetime for each Echo, not a separate limit for the whole level. At zero, the Echo and its mechanism effect disappear; the room does not end.
-- I verified the latest submission as a desktop pygame-ce project. An older Pygbag experiment remains in the repository, but I do not currently have a hosted live demo.
+- The Web demo is designed for desktop keyboard play. I have not added mobile touch controls.
 - I received the visual source files through my project workflow. I have not independently verified commercial redistribution rights, so I present this repository as coursework.
 
 ## Credits and AI Usage

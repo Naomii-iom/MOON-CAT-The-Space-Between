@@ -1,0 +1,134 @@
+{
+  "source": "original_sheet.png",
+  "source_size": [
+    1774,
+    887
+  ],
+  "canvas_size": [
+    64,
+    64
+  ],
+  "content_max_size": [
+    60,
+    60
+  ],
+  "processing": [
+    "manual connected-component selections from the irregular sheet",
+    "electric magenta/blue fringe removal",
+    "largest-silhouette isolation with a three-pixel antialias collar",
+    "centred transparent 64x64 canvas",
+    "luminance-preserving deterministic two-world recolour"
+  ],
+  "selections": {
+    "normal_a": {
+      "bbox": [
+        77,
+        73,
+        176,
+        183
+      ],
+      "role": "common crater tile"
+    },
+    "normal_b": {
+      "bbox": [
+        296,
+        73,
+        175,
+        182
+      ],
+      "role": "light crater variation"
+    },
+    "normal_c": {
+      "bbox": [
+        77,
+        288,
+        175,
+        182
+      ],
+      "role": "fine crack variation"
+    },
+    "normal_d": {
+      "bbox": [
+        1167,
+        63,
+        183,
+        192
+      ],
+      "role": "attached-rock edge variation"
+    },
+    "special": {
+      "bbox": [
+        950,
+        288,
+        176,
+        182
+      ],
+      "role": "subtle sparkle base"
+    },
+    "goal": {
+      "bbox": [
+        80,
+        513,
+        176,
+        183
+      ],
+      "role": "portal ring base"
+    }
+  },
+  "palettes": {
+    "moonlight": [
+      [
+        24,
+        29,
+        55
+      ],
+      [
+        47,
+        59,
+        91
+      ],
+      [
+        83,
+        104,
+        137
+      ],
+      [
+        135,
+        160,
+        190
+      ],
+      [
+        205,
+        217,
+        232
+      ]
+    ],
+    "shadow": [
+      [
+        31,
+        21,
+        47
+      ],
+      [
+        59,
+        39,
+        76
+      ],
+      [
+        106,
+        72,
+        118
+      ],
+      [
+        164,
+        110,
+        149
+      ],
+      [
+        226,
+        169,
+        196
+      ]
+    ]
+  }
+}
